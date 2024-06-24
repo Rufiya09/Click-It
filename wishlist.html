@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="wishlist.css">
+    <link rel="stylesheet" href="style1.css">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+<body>
+    <button class="back-button" id="back-button" onclick="back()">Go Back</button>
+    <div class="wishlist-container" id="wishlist-container">
+        <!-- Wishlist items will be appended here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wishlistContainer = document.getElementById('wishlist-container');
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+            function renderWishlist() {
+                wishlistContainer.innerHTML = '';
+                wishlist.forEach((item, index) => {
+                    const wishlistItem = document.createElement('div');
+                    wishlistItem.className = 'wishlist-item';
+                    wishlistItem.innerHTML = `
+                        <img class="wishlist-image" src="${item.image}" alt="">
+                        <div class="wishlist-text">
+                            <h5>${item.name}</h5>
+                            <span class="wishlist-price">${item.price}</span>
+                        </div>
+                        <button class="remove-button" data-index="${index}">Remove</button>
+                    `;
+                    wishlistContainer.appendChild(wishlistItem);
+                });
+
+                document.querySelectorAll('.remove-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        wishlist.splice(index, 1);
+                        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                        renderWishlist();
+                    });
+                });
+            }
+
+            renderWishlist();
+        });
+    </script>
+    <script src="wishlist.js"></script>
+</body>
+</html>
